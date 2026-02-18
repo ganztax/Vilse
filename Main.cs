@@ -24,16 +24,12 @@ public partial class Main : Node
 
 		CallDeferred(MethodName.StartNewLevel);
 	}
-
-	// private void spawn()
-	// {
-	// 	var spawnPoint = GetNode<Node3D>("Procedural.PlayerSpawn");
-	// 	return spawnPoint;
-	// }
+	
+	private Node3D GetSpawnPoint() { return GetTree().GetFirstNodeInGroup("player_spawn") as Node3D;	}
 
 	private void OnLevelLoaded(int levelNumber)
 	{
-		var spawnPoint = GetNode<Node3D>("/Procedurallevel/PlayerSpawn");
+		var spawnPoint = GetSpawnPoint();
 		if (spawnPoint is Node3D spawn) { _player.GlobalPosition = spawn.GlobalPosition; }
 		GD.Print($"Level {levelNumber} loaded");
 	}
@@ -70,7 +66,7 @@ public partial class Main : Node
 
 	private void ResetPlayer()
 	{
-		var spawnPoint = GetTree().GetFirstNodeInGroup("PlayerSpawn");
+		var spawnPoint = GetSpawnPoint();
 		if (spawnPoint is Node3D spawn)
 		{
 			_player.GlobalPosition = spawn.GlobalPosition;

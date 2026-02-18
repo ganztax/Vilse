@@ -23,4 +23,4 @@ shape = SubResource("BoxShape3D_xxi7v")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
 mesh = SubResource("PlaneMesh_yqq4t")
 
-[node name="PlayerSpawn" type="Node3D" parent="."]
+[node name="PlayerSpawn" type="Marker3D" parent="." groups=["player_spawn"]]
