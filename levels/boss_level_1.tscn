@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://cujrt65m3e1e5"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hdqgw"]
+
+[node name="BossLevel1" type="Node3D"]
+
+[node name="BossArena" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BossArena"]
+shape = SubResource("BoxShape3D_hdqgw")
+
+[node name="BossSpawnPoint" type="Marker3D" parent="."]
+
+[node name="CustomGeometry" type="Node3D" parent="."]

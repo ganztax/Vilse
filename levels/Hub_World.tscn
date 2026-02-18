@@ -1,0 +1,3 @@
+[gd_scene format=3 uid="uid://b0e4mn1rdm8lj"]
+
+[node name="HubWorld" type="Node3D"]

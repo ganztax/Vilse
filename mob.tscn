@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://uo23np35qc17"]
+
+[ext_resource type="Script" uid="uid://cqs3pjbc4ia3l" path="res://Mob.cs" id="1_dy6sc"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_nokgg"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ubaqv"]
+albedo_color = Color(0.24494207, 0.6390416, 0.38793954, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_p11y5"]
+material = SubResource("StandardMaterial3D_ubaqv")
+
+[node name="Mob" type="CharacterBody3D"]
+script = ExtResource("1_dy6sc")
+
+[node name="Pivot" type="Node3D" parent="."]
+
+[node name="Character" type="Node3D" parent="Pivot"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_nokgg")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_p11y5")

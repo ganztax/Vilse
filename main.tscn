@@ -1,0 +1,32 @@
+[gd_scene load_steps=8 format=3 uid="uid://n363dguirlci"]
+
+[ext_resource type="Script" uid="uid://cglwkmeofhesk" path="res://Main.cs" id="1_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://cbpfk8lo8ah4u" path="res://player.tscn" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://dbac3xnxkm5pv" path="res://LevelManager.cs" id="3_h2yge"]
+[ext_resource type="PackedScene" uid="uid://dh4asvwn03ynd" path="res://levels/procedural_level.tscn" id="4_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://d2w6rh4215g6o" path="res://UI/hud.tscn" id="4_7mycd"]
+[ext_resource type="PackedScene" uid="uid://dsdiqmhqq7x6t" path="res://UI/DeathMenu.tscn" id="5_272bh"]
+[ext_resource type="PackedScene" uid="uid://cfoqlkxa1y5bk" path="res://UI/pauseMenu.tscn" id="6_272bh"]
+
+[node name="Main" type="Node"]
+script = ExtResource("1_0xm2m")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.7071067, 0.7071068, 0, -0.7071068, -0.7071067, 0, 4, -4)
+shadow_enabled = true
+
+[node name="LevelManager" type="Node" parent="."]
+script = ExtResource("3_h2yge")
+ProceduralLevelScene = ExtResource("4_1bvp3")
+
+[node name="CurrentLevel" type="Node3D" parent="."]
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="HUD" parent="UI" instance=ExtResource("4_7mycd")]
+
+[node name="DeathMenu" parent="UI" instance=ExtResource("5_272bh")]
+
+[node name="PauseMenu" parent="UI" instance=ExtResource("6_272bh")]
+
+[node name="Player" parent="." instance=ExtResource("1_ig7tw")]

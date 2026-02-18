@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://dh4asvwn03ynd"]
+
+[ext_resource type="Script" uid="uid://dsw0qp4p0rmxp" path="res://levels/LevelGenerator.cs" id="1_yqq4t"]
+[ext_resource type="PackedScene" uid="uid://uo23np35qc17" path="res://mob.tscn" id="2_ije5u"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xxi7v"]
+size = Vector3(100, 1, 100)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_yqq4t"]
+size = Vector2(100, 100)
+
+[node name="ProceduralLevel" type="Node3D"]
+
+[node name="LevelGenerator" type="Node3D" parent="."]
+script = ExtResource("1_yqq4t")
+MobScene = ExtResource("2_ije5u")
+
+[node name="Ground" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
+shape = SubResource("BoxShape3D_xxi7v")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
+mesh = SubResource("PlaneMesh_yqq4t")
+
+[node name="PlayerSpawn" type="Node3D" parent="."]

@@ -1,0 +1,79 @@
+[gd_scene load_steps=2 format=3 uid="uid://dsleocrdr4lpn"]
+
+[sub_resource type="CSharpScript" id="CSharpScript_v50h2"]
+script/source = "using Godot;
+using System;
+
+public partial class LevelGenerator : Node3D
+{
+	[Export] public PackedScene MobScene;
+	[Export] public int MobCount = 10;
+	[Export] public Vector3 SpawnAreaMin = new Vector3(-50, 0, -50);
+	[Export] public Vector3 SpawnAreaMax = new Vector3(50, 0, 50);
+	[Export] public float RaycastHeight = 100f;
+
+	private RandomNumberGenerator _rng = new RandomNumberGenerator();
+	private ulong _currentSeed;
+
+	public override void _Ready() {}
+
+	public void Generatelevel()
+	{
+		_currentSeed = (ulong)GD.Randi();
+		GenerateLevelWithSeed(_currentSeed);
+	}
+
+	public void GenerateLevelWithSeed(ulong seed)
+	{
+		_currentSeed = seed;
+		_rng.Seed = seed;
+
+		ClearMobs();
+		SpawnMobs();
+
+		GD.Print($\"Level generated with seed: {seed}\");
+	}
+
+	public ulong GetCurrentSeed() { return _currentSeed; }
+
+	public void RegenerateCurrentLevel() { GenerateLevelWithSeed(_currentSeed); }
+
+	private void ClearMobs()
+	{
+		foreach (Node child in GetChildren()) { if (child is Node3D) { child.QueueFree(); } }
+	}
+
+	private void TrySpawnMobAtRandomPosition(PhysicsDirectBodyState3D spaceState)
+	{
+		float x = _rng.RandfRange(SpawnAreaMin.X, SpawnAreaMax.X);
+		float z = _rng.RandfRange(SpawnAreaMin.Z, SpawnAreaMax.Z);
+
+		// Find ground *Raycast
+		var rayOrigin = new Vector3(x, RaycastHeight, z);
+		var rayEnd = new Vector3(x, -RaycastHeight, z);
+
+		var query = PhysicsRayQueryParameters3D.Create(rayOrigin, rayEnd);
+		query.CollisionMask = 1;
+
+		var result = spaceState.IntersectRay(query);
+
+		if (result.Count == 0) return;
+
+		var mob = MobScene.Instantiate<Node3D>();
+		mob.Position = (Vector3)result[\"position\"];
+		mob.RotateY(Mathf.DegToRad(_rng.RandfRange(0, 360))); 
+		AddChild(mob);
+	}
+	private void SpawnMobs()
+	{
+		var spaceState = GetWorld3D().DirectSpaceState;
+
+		for (var i = 0; i < MobCount; i++) { TrySpawnMobAtRandomPosition(spaceState); }
+	}
+	// Called every frame. 'delta' is the elapsed time since the previous frame.
+	public override void _Process(double delta) {}
+}
+"
+
+[node name="LevelGenerator" type="Node3D"]
+script = SubResource("CSharpScript_v50h2")
