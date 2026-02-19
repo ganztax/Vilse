@@ -2,6 +2,9 @@ using Godot;
 
 public partial class XPManager : Node
 {
+	[Signal] public delegate void XPGainedEventHandler(int amount, int newTotal);
+	[Signal] public delegate void LevelUpEventHandler(int newLevel);
+	
 	[Export] public int CurrentXP { get; set; } = 0;
 	[Export] public int CurrentLevel { get; set; } = 1;
 	[Export] public int XPToNextLevel { get; set; } = 100;
@@ -39,7 +42,4 @@ public partial class XPManager : Node
 		XPToNextLevel = 100 ;
 		GD.Print("XP reset");
 	}
-
-	[Signal] public delegate void XPGainedEventHandler(int amount, int newTotal);
-	[Signal] public delegate void LevelUpEventHandler(int newLevel);
 }

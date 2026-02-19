@@ -2,6 +2,9 @@ using Godot;
 
 public partial class DeathMenu : CanvasLayer
 {
+	[Signal] public delegate void RetryPressedEventHandler();
+	[Signal] public delegate void NewLevelPressedEventHandler();
+	
 	private Label _seedLabel;
 	private Button _retryButton;
 	private Button _newLevelButton;
@@ -45,7 +48,4 @@ public partial class DeathMenu : CanvasLayer
 		EmitSignal(SignalName.NewLevelPressed);
 		HideMenu();
 	}
-	
-	[Signal] public delegate void RetryPressedEventHandler();
-	[Signal] public delegate void NewLevelPressedEventHandler();
 }

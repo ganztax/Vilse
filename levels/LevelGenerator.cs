@@ -1,6 +1,5 @@
 using Godot;
 
-
 public partial class LevelGenerator : Node3D
 {
 	[Export] public PackedScene MobScene;
@@ -84,6 +83,5 @@ public partial class LevelGenerator : Node3D
 		GD.Print($"Spawned {spawned}/{MobCount} mobs"); // Success spawn msg
 		if (spawned < MobCount) { GD.PushWarning($"Only spawned {spawned}/{MobCount} mobs"); }
 	}
-	
 }
 

@@ -2,6 +2,8 @@ using Godot;
 
 public partial class LevelManager : Node
 {
+	[Signal] public delegate void LevelLoadedEventHandler(int levelNumber);
+
 	[Export] public PackedScene ProceduralLevelScene;
 	[Export] public PackedScene BossLevel1Scene;
 	[Export] public PackedScene HubWorldScene;
@@ -111,6 +113,4 @@ public partial class LevelManager : Node
 			_currentLevelInstance = null;
 		}
 	}
-
-	[Signal] public delegate void LevelLoadedEventHandler(int levelNumber);
 }

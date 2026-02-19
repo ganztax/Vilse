@@ -2,6 +2,9 @@ using Godot;
 
 public partial class PauseMenu : CanvasLayer
 {
+	[Signal] public delegate void ResumePressedEventHandler();
+	[Signal] public delegate void KillMePressedEventHandler();
+
 	private Button _resumeButton;
 	private Button _killMeButton;
 	private Button _quitButton;
@@ -62,7 +65,4 @@ public partial class PauseMenu : CanvasLayer
 	}
 
 	private void OnQuitPressed() { GetTree().Quit(); }
-
-	[Signal] public delegate void ResumePressedEventHandler();
-	[Signal] public delegate void KillMePressedEventHandler();
 }

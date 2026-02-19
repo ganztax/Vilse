@@ -2,6 +2,8 @@ using Godot;
 
 public partial class Mob : CharacterBody3D
 {
+    [Signal] public delegate void MobKilledEventHandler(int XPReward);
+
     [Export] public int MinSpeed { get; set; } = 10;
     [Export] public int MaxSpeed { get; set; } = 18;
     [Export] public int XPReward { get; set; } = 10;
@@ -42,6 +44,4 @@ public partial class Mob : CharacterBody3D
         Velocity = Vector3.Forward * randomSpeed;    
         Velocity = Velocity.Rotated(Vector3.Up, Rotation.Y);    
     }
-
-    [Signal] public delegate void MobKilledEventHandler(int XPReward);
 }
