@@ -49,18 +49,6 @@ public partial class LevelManager : Node
 		if (generator != null) { CallDeferred(MethodName.LoadProcLevelWithSeed, generator, seed); }
 	}
 
-	private void GenerateProcLevel(LevelGenerator generator)
-	{
-		generator.GenerateLevel();
-		_lastProceduralSeed = generator.GetCurrentSeed();
-	}
-
-	private void LoadProcLevelWithSeed(LevelGenerator generator, ulong seed)
-	{
-		generator.GenerateLevelWithSeed(seed);
-		_lastProceduralSeed = seed;
-	}
-
 	public void RetryCurrentLevel()
 	{
 		if (IsProceduralLevel(_currentLevelNumber))
@@ -75,8 +63,6 @@ public partial class LevelManager : Node
 		else { LoadLevel(_currentLevelNumber); }
 	}
 
-	private void RetryProcLevel(LevelGenerator generator) => generator.GenerateLevelWithSeed(_lastProceduralSeed); 
-
 	public ulong GetLastSeed() => _lastProceduralSeed; 
 
 	public void LoadNextLevel()
@@ -84,6 +70,22 @@ public partial class LevelManager : Node
 		_currentLevelNumber++;
 		LoadLevel(_currentLevelNumber);
 	}
+
+	private void GenerateProcLevel(LevelGenerator generator)
+	{
+		generator.GenerateLevel();
+		_lastProceduralSeed = generator.GetCurrentSeed();
+	}
+
+	private void LoadProcLevelWithSeed(LevelGenerator generator, ulong seed)
+	{
+		generator.GenerateLevelWithSeed(seed);
+		_lastProceduralSeed = seed;
+	}
+
+	
+
+	private void RetryProcLevel(LevelGenerator generator) => generator.GenerateLevelWithSeed(_lastProceduralSeed); 
 
 	private PackedScene GetLevelScene(int levelNumber)
 	{

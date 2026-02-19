@@ -19,6 +19,16 @@ public partial class XPManager : Node
 		while (CurrentXP >= XPToNextLevel) { ProcessLevelUp(); }
 	}
 
+	public float GetXPProgress() { return (float)CurrentXP / XPToNextLevel; }
+
+	public void Reset()
+	{
+		CurrentXP = 0;
+		CurrentLevel = 1;
+		XPToNextLevel = 100 ;
+		GD.Print("XP reset");
+	}
+	
 	private void ProcessLevelUp()
 	{
 		CurrentXP -= XPToNextLevel;
@@ -28,18 +38,5 @@ public partial class XPManager : Node
 
 		EmitSignal(SignalName.LevelUp, CurrentLevel);
 		GD.Print($"Level up! Now level: {CurrentLevel}, Next level in: {XPToNextLevel} : XP. ");
-	}
-
-	public float GetXPProgress()
-	{
-		return (float)CurrentXP / XPToNextLevel;
-	}
-
-	public void Reset()
-	{
-		CurrentXP = 0;
-		CurrentLevel = 1;
-		XPToNextLevel = 100 ;
-		GD.Print("XP reset");
 	}
 }

@@ -9,7 +9,7 @@ public partial class PauseMenu : CanvasLayer
 	private Button _killMeButton;
 	private Button _quitButton;
 
-		public override void _Ready()
+	public override void _Ready()
 	{
 		ProcessMode = ProcessModeEnum.Always;
 

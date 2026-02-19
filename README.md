@@ -6,7 +6,6 @@ Making a basic dungeon crawler.
     proc gen
 
 Things to implement
-    "scoring system" - xp tracking
     level generation - walls and objects
     mobs - enemies aka incoming attacks
 
