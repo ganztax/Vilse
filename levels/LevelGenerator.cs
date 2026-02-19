@@ -84,4 +84,3 @@ public partial class LevelGenerator : Node3D
 		if (spawned < MobCount) { GD.PushWarning($"Only spawned {spawned}/{MobCount} mobs"); }
 	}
 }
-
