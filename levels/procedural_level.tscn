@@ -24,3 +24,4 @@ shape = SubResource("BoxShape3D_xxi7v")
 mesh = SubResource("PlaneMesh_yqq4t")
 
 [node name="PlayerSpawn" type="Marker3D" parent="." groups=["player_spawn"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)

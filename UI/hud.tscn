@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://d2w6rh4215g6o"]
+[gd_scene load_steps=9 format=3 uid="uid://d2w6rh4215g6o"]
 
 [ext_resource type="Script" uid="uid://k8skd41gd6tv" path="res://UI/Hud.cs" id="1_ne75i"]
 
@@ -19,6 +19,9 @@ bg_color = Color(0, 0, 0, 0.49803922)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rftc2"]
 bg_color = Color(1, 0.8, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ne75i"]
+bg_color = Color(0, 0, 0, 0.49803922)
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_ne75i")
@@ -60,4 +63,8 @@ theme_override_styles/background = SubResource("StyleBoxFlat_1xsix")
 theme_override_styles/fill = SubResource("StyleBoxFlat_rftc2")
 
 [node name="LevelLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_ne75i")
+text = "0"
+horizontal_alignment = 1

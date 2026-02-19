@@ -4,7 +4,7 @@ public partial class Main : Node
 {
 	private LevelManager _levelManager;
 	private XPManager _xpManager;
-	private CharacterBody3D _player;
+	private Player _player;
 	private Hud _hud;
 	private DeathMenu _deathMenu;
 	private PauseMenu _pauseMenu;
@@ -13,7 +13,7 @@ public partial class Main : Node
 	{
 		_levelManager = GetNode<LevelManager>("LevelManager");
 		_xpManager = GetNode<XPManager>("XPManager");		
-		_player = GetNode<CharacterBody3D>("Player");
+		_player = GetNode<Player>("Player");
 		_hud = GetNode<Hud>("UI/HUD");
 		_deathMenu = GetNode<DeathMenu>("UI/DeathMenu");
 		_pauseMenu = GetNode<PauseMenu>("UI/PauseMenu");
@@ -38,6 +38,8 @@ public partial class Main : Node
 	private void OnLevelLoaded(int levelNumber)
 	{
 		_player.GlobalPosition = GetSpawnPoint();
+		_player.ResetHealth();
+
 		ConnectToMobs();
 		GD.Print($"Level {levelNumber} loaded");
 	}
@@ -56,14 +58,22 @@ public partial class Main : Node
 
 	private void ConnectToMob(Mob mob)
 	{
-		var callable = Callable.From<int>(OnMobKilled);
-
-		if (mob.IsConnected(Mob.SignalName.MobKilled, callable))
-			mob.Disconnect(Mob.SignalName.MobKilled, callable);
-
+		var xpCallable = Callable.From<int>(OnMobKilled);
+		if (mob.IsConnected(Mob.SignalName.MobKilled, xpCallable))
+			mob.Disconnect(Mob.SignalName.MobKilled, xpCallable);
 		mob.MobKilled += OnMobKilled;
+
+		var dmgCallable = Callable.From<int>(OnMobAttackedPlayer);
+		if (mob.IsConnected(Mob.SignalName.MobattackedPlayer, dmgCallable))
+			mob.Disconnect(Mob.SignalName.MobattackedPlayer, dmgCallable);
+		mob.MobattackedPlayer += OnMobAttackedPlayer;		
+
 	}
 
+	private void OnMobAttackedPlayer(int damage)
+	{
+		if (_player is Player player) { player.TakeDamage(damage); }
+	}
 	private void OnMobKilled(int xpReward) { _xpManager.AddXp(xpReward); }
 
 	private void OnXpGained(int amount, int newTotal)
@@ -91,6 +101,8 @@ public partial class Main : Node
 		_pauseMenu.HideMenu();
 		CallDeferred(MethodName.OnPlayerDied);
 	}
+
+	private void OnPlayerHealthChanged(int currentHealth, int maxHealth) { _hud.UpdateHealth(currentHealth); }
 
 	private void OnPlayerDied() { _deathMenu.ShowMenu(_levelManager.GetLastSeed()); }
 

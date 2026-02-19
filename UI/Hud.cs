@@ -26,7 +26,7 @@ public partial class Hud : CanvasLayer
 		_experienceBar.Value = 0;
 	}
 
-	public void UpdateHealth(float value) { _healthBar.Value = Mathf.Clamp(value, 0, MaxHealth); }
+	public void UpdateHealth(int value) { _healthBar.Value = Mathf.Clamp(value, 0, MaxHealth); }
 	public void UpdateMana(float value) { _manaBar.Value = Mathf.Clamp(value, 0, MaxMana); }
 	public void UpdateExperience(float progress, int CurrentLevel)
 	{

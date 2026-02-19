@@ -74,7 +74,7 @@ albedo_color = Color(0.7491378, 0.61744636, 0.84461004, 1)
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_i3pqv"]
 material = SubResource("StandardMaterial3D_onrkg")
 
-[node name="Player" type="CharacterBody3D"]
+[node name="Player" type="CharacterBody3D" groups=["player"]]
 script = ExtResource("1_4flbx")
 
 [node name="Head" type="Node3D" parent="."]

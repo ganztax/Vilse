@@ -2,6 +2,9 @@ using Godot;
 
 public partial class Player : CharacterBody3D
 {
+    [Signal] public delegate void HealthChangedEventHandler(int currentHealth, int maxHealth);
+    [Signal] public delegate void PlayerDiedEventHandler();
+
     [Export] public float Speed { get; set; } = 14.0f;
     [Export] public float SprintSpeed { get; set; } = 20.0f;
     [Export] public float CrouchSpeed { get; set; } = 7.0f;
@@ -10,16 +13,21 @@ public partial class Player : CharacterBody3D
     [Export] public float MouseSensitivity { get; set; } = 0.003f;
     [Export] public float AttackCoolDown { get; set; } = 0.5f;
     [Export] public float AttackDuration { get; set; } = 0.2f;
+    [Export] public int Maxhealth { get; set; } = 100;
 
     private Node3D _head;
-    private Camera3D _camera;
     private Area3D _attackArea;
     private CollisionShape3D _attackShape;
     private CollisionShape3D _collisionShape;
     private Vector3 _targetVelocity = Vector3.Zero;
+
+    private Camera3D _camera;
     private AnimationPlayer _animationPlayer;
     private Vector3 _cameraDefaultPosition;
     private Vector3 _cameraDefaultRotation;
+
+    private int _currentHealth;
+    private bool _isAlive = true;
 
     private float _normalHeight = 2.0f;
     private float _crouchHeight = 1.0f;
@@ -53,6 +61,8 @@ public partial class Player : CharacterBody3D
 
         _attackArea.BodyEntered += OnAttackHit;
         _attackShape.Disabled = true;
+
+        _currentHealth = Maxhealth;
 
         Input.MouseMode = Input.MouseModeEnum.Captured;
     }
@@ -98,6 +108,44 @@ public partial class Player : CharacterBody3D
 
         Velocity = _targetVelocity;
         MoveAndSlide();
+    }
+    
+    public void TakeDamage(int damage)
+    {
+        if (_isAlive) return;
+
+        _currentHealth -= damage;
+        _currentHealth = Mathf.Max(_currentHealth, 0);
+
+        EmitSignal(SignalName.HealthChanged, _currentHealth, Maxhealth);
+        GD.PrintT($"Player took {damage} damage!, health:{_currentHealth}/{Maxhealth}");
+
+        if (_currentHealth <= 0) { Die(); }
+    }
+
+    public void Heal(int amount)
+    {
+        if (_isAlive) return;
+
+        _currentHealth += amount;
+        _currentHealth = Mathf.Min(_currentHealth, Maxhealth);
+
+        EmitSignal(SignalName.HealthChanged, _currentHealth, Maxhealth);
+        GD.Print($"Player healed {amount}, health: {_currentHealth}/{Maxhealth}");
+    }
+
+    public void ResetHealth()
+    {
+        _isAlive = true;
+        _currentHealth = Maxhealth;
+        EmitSignal(SignalName.HealthChanged, _currentHealth, Maxhealth);
+    }
+
+    private void Die()
+    {
+        _isAlive = false;
+        GD.Print($"Player has died!");
+        EmitSignal(SignalName.PlayerDied);
     }
     
     private void HandleAttack(double delta)
