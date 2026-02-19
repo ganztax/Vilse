@@ -1,10 +1,10 @@
-using System;
 using Godot;
 
 public partial class Mob : CharacterBody3D
 {
     [Export] public int MinSpeed { get; set; } = 10;
     [Export] public int MaxSpeed { get; set; } = 18;
+    [Export] public int XPReward { get; set; } = 10;
 
     public override void _Ready()
     {
@@ -26,7 +26,12 @@ public partial class Mob : CharacterBody3D
     
     public override void _PhysicsProcess(double delta) { MoveAndSlide(); }
 
-    public void Die() { QueueFree(); }
+    public void Die()
+    {
+        GD.Print($"Mob {Name} killed! Recieved {XPReward} XP.");
+        EmitSignal(SignalName.MobKilled, XPReward);
+        QueueFree();
+    }
 
     public void Initialize(Vector3 startPosition, Vector3 playerPosition)
     {
@@ -37,4 +42,6 @@ public partial class Mob : CharacterBody3D
         Velocity = Vector3.Forward * randomSpeed;    
         Velocity = Velocity.Rotated(Vector3.Up, Rotation.Y);    
     }
+
+    [Signal] public delegate void MobKilledEventHandler(int XPReward);
 }

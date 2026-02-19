@@ -58,3 +58,6 @@ custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 theme_override_styles/background = SubResource("StyleBoxFlat_1xsix")
 theme_override_styles/fill = SubResource("StyleBoxFlat_rftc2")
+
+[node name="LevelLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2

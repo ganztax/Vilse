@@ -3,6 +3,7 @@ using Godot;
 public partial class Main : Node
 {
 	private LevelManager _levelManager;
+	private XPManager _xpManager;
 	private CharacterBody3D _player;
 	private Hud _hud;
 	private DeathMenu _deathMenu;
@@ -11,27 +12,70 @@ public partial class Main : Node
 	public override void _Ready()
 	{
 		_levelManager = GetNode<LevelManager>("LevelManager");
+		_xpManager = GetNode<XPManager>("XPManager");		
 		_player = GetNode<CharacterBody3D>("Player");
 		_hud = GetNode<Hud>("UI/HUD");
 		_deathMenu = GetNode<DeathMenu>("UI/DeathMenu");
 		_pauseMenu = GetNode<PauseMenu>("UI/PauseMenu");
-		
+
 		_levelManager.LevelLoaded += OnLevelLoaded; 
 		_deathMenu.RetryPressed += OnRetryPressed; 
 		_deathMenu.NewLevelPressed += OnNewLevelPressed; 
 		_pauseMenu.ResumePressed += OnResumePressed;
 		_pauseMenu.KillMePressed += OnKillMePressed;
+		_xpManager.XPGained += OnXpGained;
+		_xpManager.LevelUp += OnLevelUp;
 
 		CallDeferred(MethodName.StartNewLevel);
 	}
 	
-	private Node3D GetSpawnPoint() { return GetTree().GetFirstNodeInGroup("player_spawn") as Node3D;	}
+	private Vector3 GetSpawnPoint() 
+	{ 
+		var spawn = GetTree().GetFirstNodeInGroup("player_spawn") as Node3D;
+		return 	spawn?.GlobalPosition ?? new Vector3(0, 5, 0);
+	}
 
 	private void OnLevelLoaded(int levelNumber)
 	{
-		var spawnPoint = GetSpawnPoint();
-		if (spawnPoint is Node3D spawn) { _player.GlobalPosition = spawn.GlobalPosition; }
+		_player.GlobalPosition = GetSpawnPoint();
+		ConnectToMobs();
 		GD.Print($"Level {levelNumber} loaded");
+	}
+
+	private void ConnectToMobs()
+	{
+		var mobs = GetTree().GetNodesInGroup("enemies");
+
+		foreach (var mob in mobs)
+		{
+			if (mob is Mob mobscript)
+				ConnectToMob(mobscript);
+		}
+		GD.Print($"Connected to {mobs.Count} mobs");
+	}
+
+	private void ConnectToMob(Mob mob)
+	{
+		var callable = Callable.From<int>(OnMobKilled);
+
+		if (mob.IsConnected(Mob.SignalName.MobKilled, callable))
+			mob.Disconnect(Mob.SignalName.MobKilled, callable);
+
+		mob.MobKilled += OnMobKilled;
+	}
+
+	private void OnMobKilled(int xpReward) { _xpManager.AddXp(xpReward); }
+
+	private void OnXpGained(int amount, int newTotal)
+	{
+		float progress = _xpManager.GetXPProgress();
+		_hud.UpdateExperience(progress, _xpManager.CurrentLevel);
+	}
+
+	private void OnLevelUp(int newLevel)
+	{
+		GD.Print($"You've reached level {newLevel}!");
+		_hud.UpdateExperience(0, newLevel);
 	}
 
 	private void StartNewLevel()
@@ -66,13 +110,6 @@ public partial class Main : Node
 
 	private void ResetPlayer()
 	{
-		var spawnPoint = GetSpawnPoint();
-		if (spawnPoint is Node3D spawn)
-		{
-			_player.GlobalPosition = spawn.GlobalPosition;
-			GD.Print($"Invoked reset - spawn");
-		}
-
 		_hud.UpdateHealth(100);
 		_hud.UpdateMana(100);
 	}
